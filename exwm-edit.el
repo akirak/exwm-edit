@@ -200,21 +200,21 @@ If COMPLETING-READ-ENTRIES is non-nil, feed that list into the collection
 parameter of `completing-read'
 If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
   (interactive)
-  (let* ((title (exwm-edit--buffer-title (buffer-name)))
-         (inhibit-read-only t)
-         (selection-coding-system 'utf-8))             ; required for multilang-support
+  (let ((source-buffer (current-buffer))
+        initial-text
+        (selection-coding-system 'utf-8)) ; required for multilang-support
     (when (derived-mode-p 'exwm-mode)
-      (setq exwm-edit--last-exwm-buffer (buffer-name))
-      (unless (bound-and-true-p global-exwm-edit-mode)
-        (global-exwm-edit-mode 1))
       (progn
         (exwm-input--fake-key ?\C-a)
-	(unless no-copy
-	  (exwm-input--fake-key ?\C-c)
-	  (exwm-edit--yank))
-	(run-hooks 'exwm-edit-compose-minibuffer-hook)
-	(exwm-edit--send-to-exwm-buffer
-	 (completing-read "exwm-edit: " completing-read-entries))))))
+        (unless no-copy
+          (exwm-input--fake-key ?\C-c)
+          (sleep-for exwm-edit-yank-delay)
+          (setq initial-text (gui-selection-value)))
+        (run-hooks 'exwm-edit-compose-minibuffer-hook)
+        (exwm-edit--send-to-exwm-buffer
+         (completing-read "exwm-edit: " completing-read-entries
+                          nil nil initial-text)
+         source-buffer)))))
 
 (provide 'exwm-edit)
 
