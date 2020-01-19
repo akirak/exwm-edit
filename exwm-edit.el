@@ -63,6 +63,11 @@ Otherwise split the window to the right."
   :type 'boolean
   :group 'exwm-edit)
 
+(defcustom exwm-edit-window-height 15
+  "Height of the window."
+  :type 'number
+  :group 'exwm-edit)
+
 (defcustom exwm-edit-bind-default-keys t
   "If non-nil bind default keymaps on load."
   :type 'boolean
@@ -181,7 +186,7 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
                `((side . ,(if exwm-edit-split-below
                               'bottom
                             'right))
-                 (height . 15)))
+                 (height . ,exwm-edit-window-height)))
               (ignore-errors
                 (select-window (get-buffer-window buffer)))
 	      (setq-local header-line-format
