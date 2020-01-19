@@ -5,7 +5,7 @@
 ;; Created: 2018-05-16
 ;; Keywords: convenience
 ;; License: GPL v3
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "25.1"))
 ;; Version: 0.0.1
 
 ;;; Commentary:
