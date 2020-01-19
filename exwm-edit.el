@@ -149,32 +149,18 @@ Otherwise split the window to the right."
 (defun exwm-edit--yank ()
   "Yank text to Emacs buffer with check for empty strings."
   (run-with-timer exwm-edit-yank-delay nil
-		  (lambda ()
-		    (let ((should-yank))
-		      ;; Decide if the last kill had the same contents as this.
-		      ;; (car kill-ring) doesn't work so we have to do it this way
-		      (with-temp-buffer
-			;; If kill ring is nil, yank can throw an error, ignore those
-			(ignore-errors (yank))
-			(let ((exwm-kill-ring-car (buffer-substring-no-properties
-						   (point-min)
-						   (point-max))))
-			  (unless (or (string= exwm-kill-ring-car "") (string= exwm-kill-ring-car exwm-edit-last-kill))
-			    (setq should-yank t))
-			  (setq exwm-edit-last-kill exwm-kill-ring-car)))
-
-		      (when should-yank
-			(ignore-errors (yank))
-			(run-hooks 'post-command-hook))))))
 
 (defun exwm-edit--compose (&optional no-copy)
+                  (lambda ()
+                    (when-let ((text (gui-selection-value)))
+                      (insert text)
+                      (run-hooks 'post-command-hook)))))
   "Edit text in an EXWM app.
 If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
   (interactive)
   (let* ((title (exwm-edit--buffer-title (buffer-name)))
          (existing (get-buffer title))
          (inhibit-read-only t)
-         (save-interprogram-paste-before-kill t)
          (selection-coding-system 'utf-8))             ; required for multilang-support
     (when (derived-mode-p 'exwm-mode)
       (setq exwm-edit--last-exwm-buffer (buffer-name))
