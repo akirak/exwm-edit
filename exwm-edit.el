@@ -176,11 +176,14 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
 	    (with-current-buffer buffer
 	      (run-hooks 'exwm-edit-compose-hook)
 	      (exwm-edit-mode 1)
-	      (select-window
-	       (if exwm-edit-split-below
-		   (split-window-below)
-		 (split-window-right)))
-	      (switch-to-buffer (get-buffer-create title))
+              (display-buffer-in-side-window
+               buffer
+               `((side . ,(if exwm-edit-split-below
+                              'bottom
+                            'right))
+                 (height . 15)))
+              (ignore-errors
+                (select-window (get-buffer-window buffer)))
 	      (setq-local header-line-format
 			  (substitute-command-keys
 			   "Edit, then exit with `\\[exwm-edit--finish]' or cancel with \ `\\[exwm-edit--cancel]'"))
