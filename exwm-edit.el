@@ -149,14 +149,13 @@ Otherwise split the window to the right."
 (defun exwm-edit--yank ()
   "Yank text to Emacs buffer with check for empty strings."
   (run-with-timer exwm-edit-yank-delay nil
-
-(defun exwm-edit--compose (&optional no-copy)
                   (lambda ()
                     (when-let ((text (gui-selection-value)))
                       (insert text)
                       (run-hooks 'post-command-hook)))))
 
 ;;;###autoload
+(defun exwm-edit-compose (&optional no-copy)
   "Edit text in an EXWM app.
 If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
   (interactive)
@@ -211,8 +210,8 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
 	 (completing-read "exwm-edit: " completing-read-entries))))))
 
 (when exwm-edit-bind-default-keys
-  (exwm-input-set-key (kbd "C-c '") #'exwm-edit--compose)
-  (exwm-input-set-key (kbd "C-c C-'") #'exwm-edit--compose))
+  (exwm-input-set-key (kbd "C-c '") #'exwm-edit-compose)
+  (exwm-input-set-key (kbd "C-c C-'") #'exwm-edit-compose))
 
 (provide 'exwm-edit)
 
