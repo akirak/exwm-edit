@@ -71,6 +71,14 @@ Otherwise split the window to the right."
 (defcustom exwm-edit-bind-default-keys t
   "If non-nil bind default keymaps on load."
   :type 'boolean
+  :set (lambda (sym value)
+         (set sym value)
+         (cond
+          (value
+           (define-key exwm-mode-map (kbd "C-c '") #'exwm-edit-compose)
+           (define-key exwm-mode-map (kbd "C-c C-'") #'exwm-edit-compose))
+          ;; TODO: Unbind
+          (t)))
   :group 'exwm-edit)
 
 (defcustom exwm-edit-compose-hook nil
@@ -216,10 +224,6 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
 	(run-hooks 'exwm-edit-compose-minibuffer-hook)
 	(exwm-edit--send-to-exwm-buffer
 	 (completing-read "exwm-edit: " completing-read-entries))))))
-
-(when exwm-edit-bind-default-keys
-  (exwm-input-set-key (kbd "C-c '") #'exwm-edit-compose)
-  (exwm-input-set-key (kbd "C-c C-'") #'exwm-edit-compose))
 
 (provide 'exwm-edit)
 
