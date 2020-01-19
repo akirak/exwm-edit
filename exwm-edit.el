@@ -100,9 +100,9 @@ Otherwise split the window to the right."
 
 (defun exwm-edit--send-to-exwm-buffer (text)
   "Sends TEXT to the exwm window."
-  (kill-new text)
-  (switch-to-buffer exwm-edit--last-exwm-buffer)
-  (exwm-input--set-focus (exwm--buffer->id (window-buffer (selected-window))))
+  (let ((select-enable-clipboard t))
+    (gui-select-text text))
+  (exwm-input--set-focus exwm-edit--last-exwm-buffer)
   (run-with-timer exwm-edit-paste-delay nil (lambda () (exwm-input--fake-key ?\C-v)))
   (setq exwm-edit--last-exwm-buffer nil))
 
@@ -208,7 +208,6 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
   (interactive)
   (let* ((title (exwm-edit--buffer-title (buffer-name)))
          (inhibit-read-only t)
-         (save-interprogram-paste-before-kill t)
          (selection-coding-system 'utf-8))             ; required for multilang-support
     (when (derived-mode-p 'exwm-mode)
       (setq exwm-edit--last-exwm-buffer (buffer-name))
