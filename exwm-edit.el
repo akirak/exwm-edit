@@ -155,8 +155,10 @@ Otherwise split the window to the right."
   "Yank text to Emacs buffer with check for empty strings."
   (run-with-timer exwm-edit-yank-delay nil
                   (lambda ()
-                    (when-let ((text (gui-selection-value)))
+                    (when-let ((pos (point))
+                               (text (gui-selection-value)))
                       (insert text)
+                      (goto-char pos)
                       (run-hooks 'post-command-hook)))))
 
 ;;;###autoload
