@@ -155,6 +155,8 @@ Otherwise split the window to the right."
                     (when-let ((text (gui-selection-value)))
                       (insert text)
                       (run-hooks 'post-command-hook)))))
+
+;;;###autoload
   "Edit text in an EXWM app.
 If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
   (interactive)
