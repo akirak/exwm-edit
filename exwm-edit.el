@@ -178,8 +178,13 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
       (let ((buffer (get-buffer-create title)))
         (with-current-buffer buffer
           (setq exwm-edit-source-buffer source-buffer)
+          (unless no-copy
+            (exwm-edit--yank))
           (run-hooks 'exwm-edit-compose-hook)
           (exwm-edit-mode 1)
+          (setq-local header-line-format
+                      (substitute-command-keys
+                       "Edit, then exit with `\\[exwm-edit--finish]' or cancel with \ `\\[exwm-edit--cancel]'"))
           (display-buffer-in-side-window
            buffer
            `((side . ,(if exwm-edit-split-below
@@ -187,12 +192,7 @@ If NO-COPY is non-nil, don't copy over the contents of the exwm text box"
                         'right))
              (height . ,exwm-edit-window-height)))
           (ignore-errors
-            (select-window (get-buffer-window buffer)))
-          (setq-local header-line-format
-                      (substitute-command-keys
-                       "Edit, then exit with `\\[exwm-edit--finish]' or cancel with \ `\\[exwm-edit--cancel]'"))
-          (unless no-copy
-            (exwm-edit--yank)))))))
+            (select-window (get-buffer-window buffer))))))))
 
 (defun exwm-edit--compose-minibuffer (&optional completing-read-entries no-copy)
   "Edit text in an EXWM app.
